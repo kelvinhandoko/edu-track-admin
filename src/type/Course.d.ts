@@ -24,5 +24,7 @@ type CoursePayload = {
   categoryId: string;
   name: string;
   price: string;
-  sections: Array<Omit<CourseSection, "id">>;
+  sections: Array<
+    Omit<CourseSection, "id"> & Partial<Pick<CourseSection, "id">>
+  >;
 };

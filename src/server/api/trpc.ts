@@ -6,7 +6,7 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { admin } from "@/config/firebase-admin";
+import { customInitApp } from "@/config/firebase-admin";
 import { env } from "@/env";
 import { TRPCError, initTRPC } from "@trpc/server";
 import axios from "axios";
@@ -90,6 +90,7 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
   if (!ctx.token) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
+  customInitApp();
   const user = await auth().verifySessionCookie(ctx.token, true);
   if (!user) {
     throw new TRPCError({ code: "UNAUTHORIZED" });

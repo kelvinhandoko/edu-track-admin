@@ -5,7 +5,6 @@ import { auth } from "firebase-admin";
 import { cookies, headers } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
 import { customInitApp } from "@/config/firebase-admin";
-import { api } from "@/trpc/server";
 
 customInitApp();
 

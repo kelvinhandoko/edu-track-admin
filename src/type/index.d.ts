@@ -3,3 +3,8 @@ type ApiResponse<T> = {
   code: number;
   data: T;
 };
+
+type ApiErrorResponse = {
+  message: string;
+  code: string;
+};

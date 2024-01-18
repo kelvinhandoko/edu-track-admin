@@ -5,6 +5,7 @@ import { Poppins } from "next/font/google";
 import { TRPCReactProvider } from "@/trpc/react";
 import Navbar from "../_components/Navbar";
 import SideBar from "../_components/SideBar";
+import { Toaster } from "sonner";
 
 const font = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -27,6 +28,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`flex h-[100dvh] flex-col ${font.className}`}>
         <TRPCReactProvider>
+          <Toaster duration={2000} richColors position="top-right" />
           <Navbar />
           <div className="flex flex-1 gap-4 p-4">
             <SideBar />
