@@ -96,7 +96,7 @@ const CourseForm: FC<Iprops> = ({ type }) => {
           <Button>publish</Button>
         </div>
         <div className="flex gap-8">
-          {/}
+
           <div className="flex flex-1 flex-col gap-4">
             <div className="flex items-center gap-2">
               <GridIcon />
