@@ -1,6 +1,7 @@
 import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { NumericFormat } from "react-number-format";
+import CourseRowActions from "./RowAction";
 const columnHelpers = createColumnHelper<Course>();
 const courseColumns = [
   columnHelpers.accessor("createdAt", {
@@ -13,12 +14,17 @@ const courseColumns = [
   columnHelpers.accessor("price", {
     cell: (info) => (
       <NumericFormat
+        displayType="text"
         value={info.getValue()}
         thousandSeparator="."
         decimalSeparator=","
         prefix="Rp. "
       />
     ),
+  }),
+  columnHelpers.display({
+    id: "actions",
+    cell: (info) => <CourseRowActions />,
   }),
 ] as ColumnDef<Course>[];
 

@@ -5,3 +5,6 @@ type Lecturer = {
   userId: string;
   profile: Profile;
 };
+
+type LecturerPayload = Pick<Lecturer, "bio" | "name"> &
+  Partial<Pick<Lecturer, "id">>;

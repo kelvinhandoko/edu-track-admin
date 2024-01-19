@@ -200,13 +200,10 @@ const CourseForm: FC<Iprops> = ({ type }) => {
           const snapShot = await uploadTask;
           return await getDownloadURL(snapShot.ref);
         };
-        console.log(await uploadedFile());
-        const ha = await updateImage({
+        await updateImage({
           id: res.data.id,
           backgroundUrl: await uploadedFile(),
         });
-
-        console.log(ha);
 
         toast.success(res.message);
         setTimeout(() => {
@@ -228,7 +225,7 @@ const CourseForm: FC<Iprops> = ({ type }) => {
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           autoComplete="off"
-          className="flex flex-col gap-12 p-2"
+          className="flex flex-col gap-12 p-2 duration-1000 animate-in fade-in "
         >
           <div className="flex items-center justify-between">
             <h2 className="font-bold capitalize">course setup</h2>

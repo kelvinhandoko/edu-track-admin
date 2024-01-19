@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { api } from "./trpc/server";
 
 export async function middleware(request: NextRequest) {
   const session = request.cookies.get("session");

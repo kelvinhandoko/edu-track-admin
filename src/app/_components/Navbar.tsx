@@ -1,12 +1,34 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 "use client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { auth } from "@/config/firebase";
 import { api } from "@/trpc/react";
 import { PersonIcon } from "@radix-ui/react-icons";
+import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const { data } = api.lecturer.find.useQuery();
+  const router = useRouter();
+  async function handleSignOut() {
+    //Sign out with the Firebase client
+    await signOut(auth);
+
+    //Clear the cookies in the server
+    const response = await fetch(`/api/signOut`, {
+      method: "POST",
+    });
+
+    if (response.status === 200) {
+      router.push("/login");
+    }
+  }
   return (
     <div className=" flex w-full items-center justify-between border-b p-8">
       <div className="flex items-center gap-2">
@@ -27,12 +49,21 @@ const Navbar = () => {
         </svg>
         <h1 className="text-2xl font-bold">Edutrack.</h1>
       </div>
-      <Avatar>
-        <AvatarImage src={data?.profile?.pictureUrl!} />
-        <AvatarFallback>
-          <PersonIcon className="h-8 w-8" />
-        </AvatarFallback>
-      </Avatar>
+      <Popover>
+        <PopoverTrigger asChild className="cursor-pointer">
+          <Avatar>
+            <AvatarImage src={data?.profile?.pictureUrl!} />
+            <AvatarFallback>
+              <PersonIcon className="h-8 w-8" />
+            </AvatarFallback>
+          </Avatar>
+        </PopoverTrigger>
+        <PopoverContent className="mt-2 w-fit">
+          <Button variant="outline" onClick={handleSignOut}>
+            log out
+          </Button>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 };

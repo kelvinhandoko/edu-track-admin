@@ -17,9 +17,10 @@ const courseRouter = createTRPCRouter({
         return res.data;
       } catch (error: unknown) {
         if (error instanceof AxiosError) {
+          const axiosError = error as AxiosError<ApiErrorResponse>;
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: error.message,
+            message: axiosError.response?.data.message,
           });
         }
       }
