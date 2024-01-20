@@ -1,22 +1,16 @@
 "use client";
 import { type SubmitHandler, useForm } from "react-hook-form";
-import React, { type FC, useEffect, useState } from "react";
+import { useState } from "react";
 
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-} from "firebase/auth";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "@/config/firebase";
 import { useRouter } from "next/navigation";
 
-import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import { TRPCClientError } from "@trpc/client";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -35,9 +29,7 @@ import {
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { FirebaseError } from "firebase/app";
 
-import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
-import { Separator } from "@/components/ui/separator";
 
 const LoginForm = () => {
   //hooks
@@ -184,7 +176,7 @@ const LoginForm = () => {
         </Form>
       </CardContent>
       <CardFooter className="flex flex-col gap-4">
-        <Button className="bg-primary w-full capitalize" type="submit">
+        <Button className="w-full bg-primary capitalize" type="submit">
           login
         </Button>
         <div className="relative w-full">
@@ -192,7 +184,7 @@ const LoginForm = () => {
             <span className="w-full border-t"></span>
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="text-muted-foreground px-2">Or</span>
+            <span className="px-2 text-muted-foreground">Or</span>
           </div>
         </div>
         <Button className="w-2/3" variant="outline" onClick={handleGoogleLogin}>

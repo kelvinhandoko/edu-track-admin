@@ -73,16 +73,20 @@ import { TRPCClientError } from "@trpc/client";
 
 interface Iprops {
   type: "create" | "update";
+  id?: string;
 }
 
-const CourseForm: FC<Iprops> = ({ type }) => {
+const CourseForm: FC<Iprops> = ({ type, id }) => {
   const { data: categories } = api.category.findMany.useQuery();
+  const { data: courseData, refetch } = api.course.getDetail.useQuery(id);
   const form = useForm<CoursePayload>();
   const [imageFile, setImageFile] = useState<File>();
   const [preview, setPreview] = useState<string>("");
   const { isOpen, onClose, onToggle } = useDisclosure();
   const router = useRouter();
   const { mutateAsync: createCourse } = api.course.create.useMutation();
+  const { mutateAsync: updateCourse } = api.course.update.useMutation();
+  const { mutateAsync: deleteSection } = api.course.deleteSection.useMutation();
   const { mutateAsync: updateImage } = api.course.updateImages.useMutation();
   const {
     isOpen: isSectionOpen,
@@ -123,9 +127,10 @@ const CourseForm: FC<Iprops> = ({ type }) => {
     }),
   );
 
-  const { append, fields, swap, update } = useFieldArray({
+  const { append, fields, swap, update, remove } = useFieldArray({
     control: form.control,
     name: "sections",
+    keyName: "uniqueId",
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -178,37 +183,98 @@ const CourseForm: FC<Iprops> = ({ type }) => {
     onSectionToggle();
   };
 
+  const handleDeleteSection = async (
+    sectionId: string,
+    index: number,
+    e: MouseEvent<HTMLButtonElement>,
+  ) => {
+    try {
+      e.stopPropagation();
+      if (type === "create") {
+        remove(index);
+      }
+      if (type === "update") {
+        const res = await deleteSection(sectionId);
+        if (res.code === 200) {
+          await refetch();
+          toast.success(res.message);
+        }
+      }
+    } catch (error: unknown) {
+      if (error instanceof TRPCClientError) {
+        toast.error(error.message);
+      }
+    }
+  };
+
   const onSubmit: SubmitHandler<CoursePayload> = async (data) => {
     try {
       setIsLoading(true);
-      const res = await createCourse({
-        ...data,
-        sections: data.sections.map((section, index) => ({
-          ...section,
-          position: index,
-          isFree: true,
-          isPublished: true,
-        })),
-      });
-      if (res?.code === 200) {
-        const uploadedFile = async () => {
-          const storageRef = firebaseRef(
-            storage,
-            `courses/${res.data.id}/thumbnail`,
-          );
-          const uploadTask = uploadBytes(storageRef, imageFile!);
-          const snapShot = await uploadTask;
-          return await getDownloadURL(snapShot.ref);
-        };
-        await updateImage({
-          id: res.data.id,
-          backgroundUrl: await uploadedFile(),
+      if (type === "create") {
+        const res = await createCourse({
+          ...data,
+          sections: data.sections.map((section, index) => ({
+            ...section,
+            position: index,
+            isFree: true,
+            isPublished: true,
+          })),
+        });
+        if (res?.code === 200) {
+          if (imageFile) {
+            const uploadedFile = async () => {
+              const storageRef = firebaseRef(
+                storage,
+                `courses/${res.data.id}/thumbnail`,
+              );
+              const uploadTask = uploadBytes(storageRef, imageFile);
+              const snapShot = await uploadTask;
+              return await getDownloadURL(snapShot.ref);
+            };
+            await updateImage({
+              id: res.data.id,
+              backgroundUrl: await uploadedFile(),
+            });
+
+            toast.success(res.message);
+            setTimeout(() => {
+              router.push("/");
+            }, 1000);
+          }
+        }
+      }
+      if (type === "update") {
+        const res = await updateCourse({
+          ...data,
+          sections: data.sections.map((section, index) => ({
+            ...section,
+            position: index,
+            isFree: true,
+            isPublished: true,
+          })),
         });
 
-        toast.success(res.message);
-        setTimeout(() => {
-          router.push("/");
-        }, 1000);
+        if (res?.code === 200) {
+          if (imageFile) {
+            const uploadedFile = async () => {
+              const storageRef = firebaseRef(
+                storage,
+                `courses/${res.data.id}/thumbnail`,
+              );
+              const uploadTask = uploadBytes(storageRef, imageFile);
+              const snapShot = await uploadTask;
+              return await getDownloadURL(snapShot.ref);
+            };
+            await updateImage({
+              id: res.data.id,
+              backgroundUrl: await uploadedFile(),
+            });
+          }
+          toast.success(res.message);
+          setTimeout(() => {
+            router.push("/");
+          }, 1000);
+        }
       }
     } catch (error: unknown) {
       if (error instanceof TRPCClientError) {
@@ -218,6 +284,14 @@ const CourseForm: FC<Iprops> = ({ type }) => {
       setIsLoading(false);
     }
   };
+  useEffect(() => {
+    form.reset({
+      ...courseData?.data,
+      price: courseData?.data.price,
+      sections: courseData?.data.CourseSection,
+    });
+    setPreview(courseData?.data.backgroundUrl ?? "");
+  }, [courseData?.data]);
 
   return (
     <>
@@ -240,7 +314,7 @@ const CourseForm: FC<Iprops> = ({ type }) => {
               )}
             </Button>
           </div>
-          <div className="flex gap-8">
+          <div className="flex flex-col gap-8 sm:flex-row">
             <div className="flex flex-1 flex-col gap-4">
               <div className="flex items-center gap-2">
                 <GridIcon />
@@ -402,15 +476,18 @@ const CourseForm: FC<Iprops> = ({ type }) => {
                         onDragEnd={handleDragEnd}
                       >
                         <SortableContext
-                          items={fields?.map((data, index) => data.id) ?? []}
+                          items={fields?.map((data) => data.uniqueId) ?? []}
                           strategy={verticalListSortingStrategy}
                         >
                           {fields.map((data, index) => (
                             <SortAbleCourseSection
+                              handleDelete={(e) =>
+                                handleDeleteSection(data.id!, index, e)
+                              }
                               onClick={() => handleCurrentSection(data)}
-                              key={data.title}
+                              key={data.uniqueId}
                               data={data}
-                              id={data.id}
+                              id={data.uniqueId}
                             />
                           ))}
                         </SortableContext>
@@ -460,8 +537,8 @@ const CourseForm: FC<Iprops> = ({ type }) => {
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     if (active.id !== over?.id) {
-      const oldId = fields.findIndex((data) => data.id === active.id);
-      const newId = fields.findIndex((data) => data.id === over?.id);
+      const oldId = fields.findIndex((data) => data.uniqueId === active.id);
+      const newId = fields.findIndex((data) => data.uniqueId === over?.id);
       swap(oldId, newId);
     }
   }

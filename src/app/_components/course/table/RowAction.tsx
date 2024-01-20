@@ -8,22 +8,31 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreVertical } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { type FC } from "react";
 
-const CourseRowActions = () => {
+interface Iprops {
+  id: string;
+}
+
+const CourseRowActions: FC<Iprops> = ({ id }) => {
+  const router = useRouter();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="aspect-square p-2">
+        <Button variant="outline" className="mx-auto aspect-square p-2">
           <MoreVertical />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Billing</DropdownMenuItem>
-        <DropdownMenuItem>Team</DropdownMenuItem>
-        <DropdownMenuItem>Subscription</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => router.push(`courseForm?type=update&id=${id}`)}
+        >
+          edit
+        </DropdownMenuItem>
+        <DropdownMenuItem>delete</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

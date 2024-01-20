@@ -7,7 +7,12 @@ export const metadata: Metadata = {
 };
 
 const page = ({ searchParams }: { searchParams: Record<string, string> }) => {
-  return <CourseForm type={searchParams.type as "create" | "update"} />;
+  return (
+    <CourseForm
+      type={searchParams.type as "create" | "update"}
+      id={searchParams.id}
+    />
+  );
 };
 
 export default page;

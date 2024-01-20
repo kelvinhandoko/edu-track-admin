@@ -31,7 +31,9 @@ export default function RootLayout({
           <Toaster duration={2000} richColors position="top-right" />
           <Navbar />
           <div className="flex flex-1 gap-4 p-4">
-            <SideBar />
+            <div className="hidden md:flex">
+              <SideBar />
+            </div>
             <div className="flex-[5]">{children}</div>
           </div>
         </TRPCReactProvider>

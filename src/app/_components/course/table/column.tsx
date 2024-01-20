@@ -24,7 +24,7 @@ const courseColumns = [
   }),
   columnHelpers.display({
     id: "actions",
-    cell: (info) => <CourseRowActions />,
+    cell: (info) => <CourseRowActions id={info.row.original.id} />,
   }),
 ] as ColumnDef<Course>[];
 

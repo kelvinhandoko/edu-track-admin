@@ -75,7 +75,11 @@ const CreateLecturerForm = () => {
       className="flex flex-col gap-4"
     >
       {step !== 0 && !success ? (
-        <Button variant="outline" className="aspect-square w-fit p-2">
+        <Button
+          type="button"
+          variant="outline"
+          className="aspect-square w-fit p-2"
+        >
           <ChevronLeftIcon onClick={handlePrev} />
         </Button>
       ) : null}

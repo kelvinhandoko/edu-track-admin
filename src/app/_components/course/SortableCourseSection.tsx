@@ -4,14 +4,21 @@ import { CSS } from "@dnd-kit/utilities";
 import { type UniqueIdentifier } from "@dnd-kit/core";
 import { Button } from "@/components/ui/button";
 import { DragHandleDots1Icon } from "@radix-ui/react-icons";
+import { X } from "lucide-react";
 
 interface IProps {
   data: Omit<CourseSection, "id"> & Partial<Pick<CourseSection, "id">>;
   id: UniqueIdentifier;
   onClick: () => void;
+  handleDelete: (e: MouseEvent<HTMLButtonElement>) => void;
 }
 
-const SortAbleCourseSection: FC<IProps> = ({ data, id, onClick }) => {
+const SortAbleCourseSection: FC<IProps> = ({
+  data,
+  id,
+  onClick,
+  handleDelete,
+}) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
       id: `${id}`,
@@ -49,15 +56,24 @@ const SortAbleCourseSection: FC<IProps> = ({ data, id, onClick }) => {
       {...attributes}
     >
       <p>{data.title}</p>
-
-      <Button
-        {...extendedListeners}
-        type="button"
-        variant="outline"
-        className={`${isGrabbing ? "cursor-grabbing" : "cursor-grab"}`}
-      >
-        <DragHandleDots1Icon />
-      </Button>
+      <div className="flex gap-2">
+        <Button
+          {...extendedListeners}
+          type="button"
+          variant="outline"
+          className={`${isGrabbing ? "cursor-grabbing" : "cursor-grab"}`}
+        >
+          <DragHandleDots1Icon />
+        </Button>
+        <Button
+          variant="outline"
+          type="button"
+          onClick={handleDelete}
+          className="aspect-square p-2"
+        >
+          <X />
+        </Button>
+      </div>
     </div>
   );
 };

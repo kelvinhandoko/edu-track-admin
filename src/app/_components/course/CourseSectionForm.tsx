@@ -97,7 +97,7 @@ const CourseSectionForm: FC<Iprops> = ({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className=" grid w-full  grid-cols-2 gap-4 overflow-scroll"
+            className=" grid w-full grid-cols-1  gap-4 overflow-scroll sm:grid-cols-2"
           >
             <FormField
               control={form.control}
