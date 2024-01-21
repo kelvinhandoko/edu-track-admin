@@ -31,7 +31,7 @@ const TableBody = React.forwardRef<
   <tbody
     ref={ref}
     className={cn(
-      "[&_td:last-child]:flex [&_td:last-child]:justify-center [&_tr:last-child]:border-0",
+      "[&_td:last-child]:mx-auto [&_tr:last-child]:border-0",
       className,
     )}
     {...props}

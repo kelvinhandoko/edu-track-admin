@@ -7,9 +7,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { api } from "@/trpc/react";
+import { TRPCClientError } from "@trpc/client";
 import { MoreVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { type FC } from "react";
+import { toast } from "sonner";
 
 interface Iprops {
   id: string;
@@ -17,6 +20,21 @@ interface Iprops {
 
 const CourseRowActions: FC<Iprops> = ({ id }) => {
   const router = useRouter();
+  const { mutateAsync: deleteCourse } = api.course.delete.useMutation();
+  const handleDelete = async () => {
+    try {
+      const res = await deleteCourse(id);
+
+      if (res.code === 200) {
+        toast.success(res.message);
+        await api.useUtils().lecturer.getCourses.invalidate();
+      }
+    } catch (error: unknown) {
+      if (error instanceof TRPCClientError) {
+        toast.error(error.message);
+      }
+    }
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -32,7 +50,7 @@ const CourseRowActions: FC<Iprops> = ({ id }) => {
         >
           edit
         </DropdownMenuItem>
-        <DropdownMenuItem>delete</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleDelete}>delete</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

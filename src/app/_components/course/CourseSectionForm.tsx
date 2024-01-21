@@ -25,6 +25,7 @@ import React, { useEffect, useState, type FC } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import { X } from "lucide-react";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
+import { type CourseSection } from "@/type/Course";
 
 interface Iprops {
   isOpen: boolean;

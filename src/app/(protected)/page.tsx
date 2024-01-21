@@ -4,8 +4,10 @@ import Link from "next/link";
 import CourseTable from "../_components/course/table";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "@radix-ui/react-icons";
+import { api } from "@/trpc/server";
 
 export default async function Home() {
+  const courses = await api.lecturer.getCourses.query();
   return (
     <main className="flex w-full flex-col  justify-center gap-4">
       <Link href="/courseForm?type=create" className="ml-auto" passHref>
@@ -14,7 +16,7 @@ export default async function Home() {
         </Button>
       </Link>
 
-      <CourseTable />
+      <CourseTable initialData={courses} />
     </main>
   );
 }

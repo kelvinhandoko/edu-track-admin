@@ -1,7 +1,7 @@
 import "@/styles/globals.css";
 
 import { Poppins } from "next/font/google";
-
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { TRPCReactProvider } from "@/trpc/react";
 import Navbar from "../_components/Navbar";
 import SideBar from "../_components/SideBar";
@@ -27,6 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`flex h-[100dvh] flex-col ${font.className}`}>
+        <SpeedInsights />
         <TRPCReactProvider>
           <Toaster duration={2000} richColors position="top-right" />
           <Navbar />

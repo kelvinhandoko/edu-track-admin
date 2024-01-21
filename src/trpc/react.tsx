@@ -7,6 +7,7 @@ import { useState } from "react";
 
 import { type AppRouter } from "@/server/api/root";
 import { getUrl, transformer } from "./shared";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 
 export const api = createTRPCReact<AppRouter>();
 
@@ -26,13 +27,20 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
           url: getUrl(),
         }),
       ],
-    })
+    }),
   );
 
   return (
     <QueryClientProvider client={queryClient}>
       <api.Provider client={trpcClient} queryClient={queryClient}>
-        {props.children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {props.children}
+        </ThemeProvider>
       </api.Provider>
     </QueryClientProvider>
   );

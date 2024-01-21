@@ -2,6 +2,7 @@ import { type ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { NumericFormat } from "react-number-format";
 import CourseRowActions from "./RowAction";
+import { type Course } from "@/type/Course";
 const columnHelpers = createColumnHelper<Course>();
 const courseColumns = [
   columnHelpers.accessor("createdAt", {

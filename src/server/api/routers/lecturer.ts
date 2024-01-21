@@ -2,6 +2,7 @@ import { AxiosError, type AxiosResponse } from "axios";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { type Course } from "@/type/Course";
 
 const BASE_PATH = "/lecturer";
 

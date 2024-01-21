@@ -12,6 +12,7 @@ import { api } from "@/trpc/react";
 import { PersonIcon } from "@radix-ui/react-icons";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import { ThemeToggle } from "./ThemeToggle";
 
 const Navbar = () => {
   const { data } = api.lecturer.find.useQuery();
@@ -49,21 +50,24 @@ const Navbar = () => {
         </svg>
         <h1 className="text-2xl font-bold">Edutrack.</h1>
       </div>
-      <Popover>
-        <PopoverTrigger asChild className="cursor-pointer">
-          <Avatar>
-            <AvatarImage src={data?.profile?.pictureUrl!} />
-            <AvatarFallback>
-              <PersonIcon className="h-8 w-8" />
-            </AvatarFallback>
-          </Avatar>
-        </PopoverTrigger>
-        <PopoverContent className="mt-2 w-fit">
-          <Button variant="outline" onClick={handleSignOut}>
-            log out
-          </Button>
-        </PopoverContent>
-      </Popover>
+      <div className="flex gap-2">
+        <ThemeToggle />
+        <Popover>
+          <PopoverTrigger asChild className="cursor-pointer">
+            <Avatar>
+              <AvatarImage src={data?.profile?.pictureUrl!} />
+              <AvatarFallback>
+                <PersonIcon className="h-8 w-8" />
+              </AvatarFallback>
+            </Avatar>
+          </PopoverTrigger>
+          <PopoverContent className="mt-2 w-fit">
+            <Button variant="outline" onClick={handleSignOut}>
+              log out
+            </Button>
+          </PopoverContent>
+        </Popover>
+      </div>
     </div>
   );
 };

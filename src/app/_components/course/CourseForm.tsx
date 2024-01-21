@@ -70,15 +70,23 @@ import { storage } from "@/config/firebase";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { TRPCClientError } from "@trpc/client";
+import {
+  type CourseSection,
+  type CoursePayload,
+  type GetDetailCourse,
+} from "@/type/Course";
 
 interface Iprops {
   type: "create" | "update";
   id?: string;
+  initialData: GetDetailCourse;
 }
 
-const CourseForm: FC<Iprops> = ({ type, id }) => {
+const CourseForm: FC<Iprops> = ({ type, id, initialData }) => {
   const { data: categories } = api.category.findMany.useQuery();
-  const { data: courseData, refetch } = api.course.getDetail.useQuery(id);
+  const { data: courseData, refetch } = api.course.getDetail.useQuery(id, {
+    initialData,
+  });
   const form = useForm<CoursePayload>();
   const [imageFile, setImageFile] = useState<File>();
   const [preview, setPreview] = useState<string>("");

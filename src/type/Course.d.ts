@@ -1,3 +1,6 @@
+import { type api } from "@/trpc/server";
+import { TypeOf } from "zod";
+
 type Course = {
   id: string;
   name: string;
@@ -29,3 +32,5 @@ type CoursePayload = {
   >;
   id?: string;
 };
+
+type GetDetailCourse = Awaited<ReturnType<typeof api.course.getDetail.query>>;

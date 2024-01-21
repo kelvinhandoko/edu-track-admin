@@ -2,6 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { AxiosError, type AxiosResponse } from "axios";
 import { TRPCError } from "@trpc/server";
+import { type Course, type CoursePayload } from "@/type/Course";
 
 const BASE_PATH = "/course";
 
@@ -62,6 +63,7 @@ const courseRouter = createTRPCRouter({
   getDetail: protectedProcedure
     .input(z.string().optional())
     .query(async ({ ctx, input }) => {
+      if (!input) return;
       const res: AxiosResponse<ApiResponse<Course>> = await ctx.api.get(
         `${BASE_PATH}/detail/${input}`,
       );

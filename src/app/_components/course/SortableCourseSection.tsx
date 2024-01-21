@@ -5,6 +5,7 @@ import { type UniqueIdentifier } from "@dnd-kit/core";
 import { Button } from "@/components/ui/button";
 import { DragHandleDots1Icon } from "@radix-ui/react-icons";
 import { X } from "lucide-react";
+import { type CourseSection } from "@/type/Course";
 
 interface IProps {
   data: Omit<CourseSection, "id"> & Partial<Pick<CourseSection, "id">>;
