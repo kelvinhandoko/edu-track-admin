@@ -4,15 +4,16 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/trpc/react";
 import { BookmarkIcon, PersonIcon } from "@radix-ui/react-icons";
+import { Settings } from "lucide-react";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 
 const SideBar = () => {
   const { data, isFetching } = api.lecturer.find.useQuery();
-  const router = useRouter();
   const pathName = usePathname();
   return (
-    <div className="flex flex-1 flex-col items-center gap-4 border-r px-8">
+    <div className="flex flex-1 flex-col items-center gap-4 p-0 sm:border-r sm:px-8">
       {isFetching ? (
         <Skeleton className=" h-24 w-36 rounded-md border p-4 px-8" />
       ) : (
@@ -28,14 +29,23 @@ const SideBar = () => {
       )}
 
       <p className="text-md mt-4 font-bold text-muted-foreground">main menu</p>
-      <div className="flex w-full flex-col items-center">
-        <Button
-          onClick={() => router.push("/")}
-          variant={pathName === "/" ? "secondary" : "outline"}
-          className="w-fit p-4 px-8"
-        >
-          <BookmarkIcon className="mr-2 h-4 w-4" /> courses
-        </Button>
+      <div className="flex w-full flex-col items-center gap-4">
+        <Link href="/" className="w-full">
+          <Button
+            variant={pathName === "/" ? "secondary" : "outline"}
+            className="w-full p-4 px-8 sm:w-fit"
+          >
+            <BookmarkIcon className="mr-2 h-4 w-4" /> courses
+          </Button>
+        </Link>
+        <Link href="/setting" className="w-full">
+          <Button
+            variant={pathName === "/setting" ? "secondary" : "outline"}
+            className="w-full p-4 px-8 sm:w-fit"
+          >
+            <Settings className="mr-2 h-4 w-4" /> setting
+          </Button>
+        </Link>
       </div>
     </div>
   );

@@ -44,10 +44,11 @@ import {
   DndContext,
   closestCenter,
   KeyboardSensor,
-  PointerSensor,
   useSensor,
   useSensors,
   type DragEndEvent,
+  TouchSensor,
+  MouseSensor,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -124,7 +125,7 @@ const CourseForm: FC<Iprops> = ({ type, id, initialData }) => {
       }
       if (rejection.length > 0) {
         form.setError("backgroundUrl", {
-          message: rejection[0]?.errors[0]?.message,
+          message: "file cannot be larger than 4 mb",
         });
       }
     },
@@ -142,7 +143,17 @@ const CourseForm: FC<Iprops> = ({ type, id, initialData }) => {
   });
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 300,
+        tolerance: 8,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
@@ -228,8 +239,6 @@ const CourseForm: FC<Iprops> = ({ type, id, initialData }) => {
       }
     }
   };
-
-  console.log(form.formState.errors);
 
   const onSubmit: SubmitHandler<CoursePayload> = async (data) => {
     try {
@@ -345,6 +354,10 @@ const CourseForm: FC<Iprops> = ({ type, id, initialData }) => {
             <>
               <div className="flex flex-col gap-8 sm:flex-row">
                 <div className="flex flex-1 flex-col gap-4">
+                  <div className="flex items-center gap-2">
+                    <GridIcon />
+                    <p>customize your courses</p>
+                  </div>
                   <Skeleton className="h-24 w-full rounded-md border p-4 px-8" />
                   <Skeleton className="h-56 w-full rounded-md border p-4 px-8" />
                   <Skeleton className="h-24 w-full rounded-md border p-4 px-8" />
@@ -414,13 +427,13 @@ const CourseForm: FC<Iprops> = ({ type, id, initialData }) => {
                                       src={preview}
                                       alt="Image"
                                       fill
-                                      className="rounded-md object-contain"
+                                      className="rounded-md object-contain brightness-90"
                                     />
                                     <Button
                                       onClick={deleteImage}
                                       type="button"
-                                      className="absolute right-0 top-0 p-2"
-                                      variant="ghost"
+                                      className="absolute right-0 top-0 p-2 mix-blend-difference"
+                                      variant="outline"
                                     >
                                       <X />
                                     </Button>

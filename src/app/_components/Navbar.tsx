@@ -13,6 +13,9 @@ import { PersonIcon } from "@radix-ui/react-icons";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import SideBar from "./SideBar";
+import { List } from "lucide-react";
 
 const Navbar = () => {
   const { data } = api.lecturer.find.useQuery();
@@ -32,6 +35,16 @@ const Navbar = () => {
   }
   return (
     <div className=" flex w-full items-center justify-between border-b p-8">
+      <Sheet>
+        <SheetTrigger asChild className="flex sm:hidden">
+          <Button className="aspect-square p-2" variant="outline">
+            <List />
+          </Button>
+        </SheetTrigger>
+        <SheetContent side="left">
+          <SideBar />
+        </SheetContent>
+      </Sheet>
       <div className="flex items-center gap-2">
         <svg
           width="38"
@@ -48,10 +61,9 @@ const Navbar = () => {
             />
           </g>
         </svg>
-        <h1 className="text-2xl font-bold">Edutrack.</h1>
+        <h1 className="hidden text-2xl font-bold sm:flex">Edutrack.</h1>
       </div>
       <div className="flex gap-2">
-        <ThemeToggle />
         <Popover>
           <PopoverTrigger asChild className="cursor-pointer">
             <Avatar>
@@ -67,6 +79,7 @@ const Navbar = () => {
             </Button>
           </PopoverContent>
         </Popover>
+        <ThemeToggle />
       </div>
     </div>
   );
