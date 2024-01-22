@@ -9,7 +9,7 @@ import { api } from "@/trpc/server";
 export default async function Home() {
   const courses = await api.lecturer.getCourses.query();
   return (
-    <main className="flex w-full flex-col  justify-center gap-4">
+    <main className="flex w-full flex-col justify-center gap-4  duration-1000 animate-in fade-in">
       <Link href="/courseForm?type=create" className="ml-auto" passHref>
         <Button variant="outline" className="p-2">
           <PlusIcon className="mr-4 h-6 w-6" /> new courses

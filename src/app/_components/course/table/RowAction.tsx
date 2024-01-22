@@ -20,6 +20,7 @@ interface Iprops {
 
 const CourseRowActions: FC<Iprops> = ({ id }) => {
   const router = useRouter();
+  const utils = api.useUtils();
   const { mutateAsync: deleteCourse } = api.course.delete.useMutation();
   const handleDelete = async () => {
     try {
@@ -27,7 +28,7 @@ const CourseRowActions: FC<Iprops> = ({ id }) => {
 
       if (res.code === 200) {
         toast.success(res.message);
-        await api.useUtils().lecturer.getCourses.invalidate();
+        await utils.lecturer.invalidate();
       }
     } catch (error: unknown) {
       if (error instanceof TRPCClientError) {
