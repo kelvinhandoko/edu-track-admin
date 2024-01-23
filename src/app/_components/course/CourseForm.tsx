@@ -120,6 +120,7 @@ const CourseForm: FC<Iprops> = ({ type, id, initialData }) => {
     (acceptedFiles: File[], rejection: FileRejection[]) => {
       if (acceptedFiles.length > 0) {
         form.clearErrors("backgroundUrl");
+        form.setValue("backgroundUrl", acceptedFiles[0]?.name!);
         setImageFile(acceptedFiles[0]);
         return;
       }
@@ -171,6 +172,7 @@ const CourseForm: FC<Iprops> = ({ type, id, initialData }) => {
   // create delete image handler
   const deleteImage = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
+    form.setValue("backgroundUrl", "");
     setImageFile(undefined);
     setPreview("");
   };
@@ -419,25 +421,25 @@ const CourseForm: FC<Iprops> = ({ type, id, initialData }) => {
                             ) : (
                               <div className="flex w-full flex-col items-center justify-center gap-4">
                                 {preview ? (
-                                  <AspectRatio
-                                    ratio={16 / 9}
-                                    className="relative"
-                                  >
-                                    <Image
-                                      src={preview}
-                                      alt="Image"
-                                      fill
-                                      className="rounded-md object-contain brightness-90"
-                                    />
+                                  <div className="flex w-full gap-2">
+                                    <AspectRatio ratio={16 / 9}>
+                                      <Image
+                                        src={preview}
+                                        alt="Image"
+                                        fill
+                                        className="rounded-md object-cover brightness-90"
+                                        loading="lazy"
+                                      />
+                                    </AspectRatio>
                                     <Button
                                       onClick={deleteImage}
                                       type="button"
-                                      className="absolute right-0 top-0 p-2 mix-blend-difference"
+                                      className="ml-auto p-2 mix-blend-difference"
                                       variant="outline"
                                     >
                                       <X />
                                     </Button>
-                                  </AspectRatio>
+                                  </div>
                                 ) : (
                                   <>
                                     <UploadCloud className="h-8 w-8" />
